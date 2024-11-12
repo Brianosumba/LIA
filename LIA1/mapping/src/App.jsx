@@ -1,10 +1,10 @@
 import "./App.css";
-import movies from "./Users";
+import Object from "./Object";
 
 const App = () => {
   return (
     <div>
-      <h1>Top 6 Marvel Movies</h1>
+      {/* <h1>Top 6 Marvel Movies</h1>
       <ol className="movie-list">
         {movies.map((movie) => (
           <li key={movie.id}>
@@ -15,7 +15,8 @@ const App = () => {
             <p>{movie.yearPublished}</p>
           </li>
         ))}
-      </ol>
+      </ol> */}
+      <Object />
     </div>
   );
 };
