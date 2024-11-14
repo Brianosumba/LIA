@@ -1,13 +1,15 @@
 import { useState } from "react";
 
 const Form = () => {
+  // Step 1: Initialize state for form fields
   const [formData, setFormData] = useState({
     name: "",
     email: "",
   });
 
-  const [submit, setSubmit] = useState(null);
+  const [submittedData, setSubmittedData] = useState(null);
 
+  // Step 2: Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -16,16 +18,16 @@ const Form = () => {
     }));
   };
 
+  // Step 3: Handle form submission
   const handleSubmit = (e) => {
-    e.prevDefault();
-    setSubmit(formData);
-    console.log(formData);
-    setFormData({ name: "", email: "" });
+    e.preventDefault();
+    setSubmittedData(formData); // Update the submitted data state
+    setFormData({ name: "", email: "" }); // Reset form fields
   };
 
   return (
     <div>
-      <h1>User information</h1>
+      <h1>User Information Form</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Name:
@@ -34,6 +36,7 @@ const Form = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
+            placeholder="Name"
           />
         </label>
         <br />
@@ -44,20 +47,23 @@ const Form = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
+            placeholder="Email"
           />
         </label>
         <br />
         <button type="submit">Submit</button>
       </form>
-      {submit && (
+
+      {/* Display submitted data */}
+      {submittedData && (
         <div>
-          {console.log(submit)}
-          <h2>My data</h2>
-          <p>Name: {submit.name}</p>
-          <p>Email: {submit.email}</p>
+          <h2>Submitted Data</h2>
+          <p>Name: {submittedData.name}</p>
+          <p>Email: {submittedData.email}</p>
         </div>
       )}
     </div>
   );
 };
+
 export default Form;
