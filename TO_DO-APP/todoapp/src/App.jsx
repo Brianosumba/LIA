@@ -1,9 +1,9 @@
-import ToDo from "./ToDo";
+import Counter from "./Counter";
 
 const App = () => {
   return (
     <div>
-      <ToDo />
+      <Counter />
     </div>
   );
 };
