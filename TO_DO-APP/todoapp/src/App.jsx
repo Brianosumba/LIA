@@ -1,9 +1,38 @@
-import Form from "./Form";
+import ToDo from "./components/ToDo";
+import FilterButton from "./components/FilterButton";
+import Form from "./components/Form";
 
-const App = () => {
+const App = (props) => {
+  const taskList = props.tasks?.map((task) => (
+    <ToDo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+    />
+  ));
+
+  const addTask = (name) => {
+    alert(name);
+  };
   return (
-    <div>
-      <Form />
+    <div className="todoapp stack-large">
+      <h1>TodoMatic</h1>
+      <Form addTask={addTask} />
+
+      <div className="filters btn-group stack-exception">
+        <FilterButton />
+        <FilterButton />
+        <FilterButton />
+      </div>
+      <h2 id="list-heading">3 tasks remaining</h2>
+      <ul
+        role="list"
+        className="todo-list stack-large stack-exception"
+        aria-labelledby="list-heading"
+      >
+        {taskList}
+      </ul>
     </div>
   );
 };
