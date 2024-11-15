@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Hobby from "./Hobby";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  // const [students, setStudents] = useState(Users);
 
+  // const removeStudent = (id) => {
+  //   console.log(id);
+  //   setStudents(students.filter((student) => student.id !== id));
+  // };
+
+  // const removeAll = () => {
+  //   setStudents([]);
+  // };
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Hobby />
+    //   <div className="container">
+    //     <h1>Student List</h1>
+    //     <>
+    //       <ul className="student-list">
+    //         {students.map((student) => (
+    //           <li key={student.id} className="student-list">
+    //             <p>
+    //               {student.id} {student.name} {student.age}{" "}
+    //             </p>
+    //             <button
+    //               className="remove"
+    //               onClick={() => removeStudent(student.id)}
+    //             >
+    //               Remove
+    //             </button>
+    //           </li>
+    //         ))}
+    //       </ul>
+    //       <button className="clear-all" onClick={removeAll}>
+    //         Clear
+    //       </button>
+    //     </>
+    //   </div>
+  );
+};
 
-export default App
+export default App;
