@@ -1,5 +1,5 @@
 import "./App.css";
-import Hobby from "./Hobby";
+import AxiosExample from "./Ax";
 
 const App = () => {
   // const [students, setStudents] = useState(Users);
@@ -13,7 +13,7 @@ const App = () => {
   //   setStudents([]);
   // };
   return (
-    <Hobby />
+    <AxiosExample />
     //   <div className="container">
     //     <h1>Student List</h1>
     //     <>
