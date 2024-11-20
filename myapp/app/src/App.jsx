@@ -1,5 +1,5 @@
 import "./App.css";
-import AxiosExample from "./Ax";
+import File from "./useeffect/File";
 
 const App = () => {
   // const [students, setStudents] = useState(Users);
@@ -13,7 +13,7 @@ const App = () => {
   //   setStudents([]);
   // };
   return (
-    <AxiosExample />
+    <File />
     //   <div className="container">
     //     <h1>Student List</h1>
     //     <>

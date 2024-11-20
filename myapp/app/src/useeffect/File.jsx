@@ -8,7 +8,7 @@ const File = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("../countries.json"); // Relative to the public folder
+        const response = await fetch("../Quiz.json"); // Relative to the public folder
         if (!response.ok) {
           throw new Error("Failed to fetch JSON data");
         }
@@ -33,13 +33,8 @@ const File = () => {
       <ul>
         {data.map((item, index) => (
           <li key={index}>
-            <h3>{item.name}</h3>
-            <h4>{item.age}</h4>
-            <img
-              src={item.photo}
-              alt={item.name}
-              style={{ height: "auto", width: "300px" }}
-            />
+            <h3>{item.question}</h3>
+            <h4>{item.A}</h4>
           </li>
         ))}
       </ul>
