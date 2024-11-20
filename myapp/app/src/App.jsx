@@ -1,5 +1,5 @@
 import "./App.css";
-import File from "./useeffect/File";
+import Quiz from "./Component/Quiz";
 
 const App = () => {
   // const [students, setStudents] = useState(Users);
@@ -13,7 +13,7 @@ const App = () => {
   //   setStudents([]);
   // };
   return (
-    <File />
+    <Quiz />
     //   <div className="container">
     //     <h1>Student List</h1>
     //     <>
