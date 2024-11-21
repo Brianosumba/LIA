@@ -137,6 +137,9 @@ const Weather = () => {
           <h5 className="weather-app_pressure">
             Pressure: {weatherData.main.pressure}
           </h5>
+          <h6 className="weather-app__wind">
+            Wind Speed: {weatherData.wind?.speed ?? "--"} m/s
+          </h6>
           <img
             src={`https://openweathermap.org/img/wn/${weatherData.weather?.[0]?.icon}@2x.png`} // Weather icon from the API
             alt={weatherData.weather?.[0]?.description || "Weather icon"} // Description of the weather
