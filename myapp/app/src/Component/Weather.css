@@ -1,0 +1,151 @@
+/* General body styles */
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Main container styles */
+.weather-app {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search form styles */
+.weather-app__form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.weather-app__input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px 0 0 10px;
+  outline: none;
+}
+
+.weather-app__input:focus {
+  box-shadow: 0 0 8px rgba(102, 166, 255, 0.7);
+}
+
+.weather-app__button {
+  background: #66a6ff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0 10px 10px 0;
+  transition: background 0.3s ease;
+}
+
+.weather-app__button:hover {
+  background: #89f7fe;
+}
+
+/* Weather information container */
+.weather-app__info {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+}
+
+.weather-app__heading {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.weather-app__temperature {
+  font-size: 40px;
+  margin: 10px 0;
+  font-weight: bold;
+  color: #ff7f50;
+}
+
+.weather-app_humidity,
+.weather-app_feelslike,
+.weather-app_pressure {
+  font-size: 18px;
+  margin: 5px 0;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Icon styles */
+.weather-app__icon {
+  width: 100px;
+  height: 100px;
+  margin: 10px 0;
+}
+
+/* Description */
+.weather-app__description {
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #555;
+}
+
+/* Loading and error messages */
+.loading {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+}
+
+.error {
+  font-size: 18px;
+  color: #ff4d4d;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .weather-app {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .weather-app__heading {
+    font-size: 24px;
+  }
+
+  .weather-app__temperature {
+    font-size: 36px;
+  }
+
+  .weather-app_humidity,
+  .weather-app_feelslike,
+  .weather-app_pressure {
+    font-size: 16px;
+  }
+}

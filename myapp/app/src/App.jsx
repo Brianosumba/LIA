@@ -1,5 +1,5 @@
 import "./App.css";
-import Quiz from "./Component/Quiz";
+import Weather from "./Component/Weather";
 
 const App = () => {
   // const [students, setStudents] = useState(Users);
@@ -13,7 +13,7 @@ const App = () => {
   //   setStudents([]);
   // };
   return (
-    <Quiz />
+    <Weather />
     //   <div className="container">
     //     <h1>Student List</h1>
     //     <>
