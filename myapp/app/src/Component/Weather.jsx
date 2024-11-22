@@ -1,139 +1,159 @@
-import axios from "axios"; // Importing the axios library for making HTTP requests
-import { useState, useEffect, useCallback } from "react"; // Importing React hooks for managing state and side effects
-import "./Weather.css"; // Importing the CSS file for styling the Weather component
+import axios from "axios"; // Importing axios for making HTTP requests
+import { useState, useEffect, useCallback } from "react"; // Importing React hooks
+import "./Weather.css"; // Importing CSS for styling
 
-// The Weather component that displays weather information for a city
+// Main Weather component that fetches and displays weather information
 const Weather = () => {
-  // `city` holds the name of the city to search for; it starts with a default value "Stockholm"
+  // State to store the city name (default: "Stockholm")
   const [city, setCity] = useState("Stockholm");
 
-  // `weatherData` stores the weather information returned from the API
+  // State to store user input from the search bar
+  const [searchInput, setSearchInput] = useState("");
+
+  // State to store the weather data fetched from the API
   const [weatherData, setWeatherData] = useState(null);
 
-  // `loading` tracks whether the app is currently fetching data from the API
+  // State to track if the app is loading (e.g., waiting for API response)
   const [loading, setLoading] = useState(false);
 
-  // `error` stores any error message to display if the API call fails
+  // State to store any error messages if something goes wrong
   const [error, setError] = useState(null);
 
-  // API key for accessing the OpenWeather API, stored securely in environment variables
+  // API key is securely stored in an environment variable
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
- 
- 
-  // Function to fetch weather data for a given city name
+  /**
+   * A function to fetch weather data from the OpenWeather API.
+   * - useCallback ensures this function is memoized, meaning it only changes
+   *   if its dependency (`API_KEY`) changes, preventing unnecessary re-renders.
+   */
   const fetchWeatherData = useCallback(
     async (cityName) => {
-      // Check if the API key is missing, and show an error if it is
+      // Validate that the API key exists
       if (!API_KEY) {
-        setError("API Key is missing or invalid."); // Set an error message
-        setLoading(false); // Stop the loading spinner
-        return; // Exit the function early
+        setError("API Key is missing or invalid."); // Show an error message
+        setLoading(false); // Stop the loading state
+        return; // Exit the function
       }
 
-      // Check if the city name is empty, and show an error if it is
+      // Validate that the city name is not empty
       if (cityName.trim() === "") {
-        setError("City name cannot be empty."); // Display an error for empty input
-        return; // Exit the function early
+        setError("City name cannot be empty."); // Show an error message
+        setLoading(false); // Stop the loading state
+        return; // Exit the function
       }
 
-      // Set loading state to true before starting the API request
-      setLoading(true);
+      setLoading(true); // Start the loading spinner
       setError(null); // Clear any previous errors
+      setWeatherData(null); // Clear previous weather data
 
       try {
-        // Make a GET request to the OpenWeather API
+        // Make a GET request to fetch weather data for the specified city
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather`,
           {
             params: {
-              q: cityName.trim(), // Trim whitespace from the city name
-              units: "metric", // Use metric units for temperature (Celsius)
-              lang: "en", // Set language for descriptions to English
-              appid: API_KEY, // Pass the API key for authentication
+              q: cityName.trim(), // City name (trim removes extra spaces)
+              units: "metric", // Metric units (Celsius for temperature)
+              lang: "en", // Language for weather description
+              appid: API_KEY, // API key for authentication
             },
           }
         );
 
-        // If the request is successful, store the weather data in state
-        setWeatherData(response.data);
+        setWeatherData(response.data); // Save the fetched weather data
       } catch (err) {
-        // Handle errors from the API
+        // Handle different types of errors
         if (err.response) {
-          // If the API returns a 404 status, the city was not found
+          // If the API returns a 404 (city not found)
           setError(
             err.response.status === 404
               ? `City "${cityName}" not found. Please try another city.`
               : "Failed to fetch weather data. Please try again later."
           );
         } else {
-          // Handle unexpected network or server errors
+          // Handle unexpected errors (e.g., network issues)
           setError("An unexpected error occurred. Please try again later.");
         }
 
-        // Clear any previous weather data if the request fails
-        setWeatherData(null);
+        setWeatherData(null); // Clear weather data if there was an error
       } finally {
-        // Stop the loading spinner after the request completes
-        setLoading(false);
+        setLoading(false); // Stop the loading spinner
       }
     },
-    [API_KEY] // Dependencies for useCallback: API_KEY is assumed to remain constant
+    [API_KEY] // useCallback only updates if API_KEY changes
   );
 
-  // Automatically fetch weather data for the default city ("Stockholm") when the component first loads
+  /**
+   * useEffect is used to automatically fetch weather data for the default city ("Stockholm")
+   * when the component is first loaded.
+   * - It also re-fetches data if the `city` state changes.
+   */
   useEffect(() => {
     fetchWeatherData(city);
-  }, [city, fetchWeatherData]); // Include 'city' and 'fetchWeatherData' in the dependency array
+  }, [city, fetchWeatherData]); // Dependencies: `city` and `fetchWeatherData`
 
-  // Handle form submission when the user searches for a new city
+  /**
+   * Handles the form submission when the user searches for a new city.
+   * - Prevents the default form submission (e.g., page refresh).
+   * - Updates the `city` state to the user input to trigger a new API fetch.
+   */
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default browser behavior of refreshing the page
-
-    if (city.trim() === "") {
-      setError("Please enter a city."); // Show an error if the city input is empty
+    e.preventDefault(); // Prevent the form from refreshing the page
+    if (searchInput.trim() === "") {
+      setError("Please enter a city."); // Show an error if the input is empty
       return;
     }
-
-    // Fetch weather data for the entered city
-    fetchWeatherData(city);
+    setCity(searchInput); // Update the `city` state with the search input
   };
 
-  // If the app is currently loading, show a loading message
+  /**
+   * Handles input changes as the user types in the search bar.
+   * - Updates the `searchInput` state to reflect the current input value.
+   * - Clears any existing error messages.
+   */
+  const handleInputChange = (e) => {
+    setSearchInput(e.target.value); // Update `searchInput` with user input
+    if (error) setError(null); // Clear error messages when input changes
+  };
+
+  // Conditional rendering:
+  // Show "Loading..." message if the app is fetching data
   if (loading) return <p className="loading">Loading...</p>;
 
-  // If there was an error, display the error message
+  // Show error message if there's an error
   if (error) return <p className="error">Error: {error}</p>;
 
-  // Render the weather app UI
+  // Render the app UI
   return (
     <div className="weather-app">
-      {/* Search form where users can enter a city name */}
+      {/* Search form where users can input the city name */}
       <form onSubmit={handleSubmit} className="weather-app__form">
         <input
-          type="text" // Input field for entering the city name
-          placeholder="Search for a city..." // Placeholder text shown when the input is empty
-          value={city} // Bind the input's value to the `city` state
-          onChange={(e) => setCity(e.target.value)} // Update the `city` state as the user types
-          className="weather-app__input" // CSS class for styling the input
+          type="text" // Input field for city name
+          placeholder="Search for a city..." // Placeholder text
+          value={searchInput} // Controlled input bound to `searchInput` state
+          onChange={handleInputChange} // Update state as the user types
+          className="weather-app__input" // Style using CSS
         />
         <button type="submit" className="weather-app__button">
           Search
         </button>
       </form>
 
-      {/* Display weather information if it is available */}
+      {/* Show weather information if weatherData exists */}
       {weatherData && (
         <div className="weather-app__info">
-          <h1 className="weather-app__heading">
-            Weather in {weatherData.name} {/* City name from the API data */}
-          </h1>
+          {/* Display city name */}
+          <h1 className="weather-app__heading">Weather in {weatherData.name}</h1>
+
+          {/* Display temperature */}
           <h2 className="weather-app__temperature">
-            {weatherData.main?.temp ?? "--"}°C {/* Temperature in Celsius */}
+            {weatherData.main?.temp ?? "--"}°C
           </h2>
 
+          {/* Display additional weather details */}
           <h3 className="weather-app_humidity">
-            {" "}
             Humidity: {weatherData.main.humidity}
           </h3>
           <h4 className="weather-app_feelslike">
@@ -145,15 +165,17 @@ const Weather = () => {
           <h6 className="weather-app__wind">
             Wind Speed: {weatherData.wind?.speed ?? "--"} m/s
           </h6>
+
+          {/* Display weather icon */}
           <img
-            src={`https://openweathermap.org/img/wn/${weatherData.weather?.[0]?.icon}@2x.png`} // Weather icon from the API
-            alt={weatherData.weather?.[0]?.description || "Weather icon"} // Description of the weather
-            className="weather-app__icon" // CSS class for styling the icon
+            src={`https://openweathermap.org/img/wn/${weatherData.weather?.[0]?.icon}@2x.png`}
+            alt={weatherData.weather?.[0]?.description || "Weather icon"}
+            className="weather-app__icon"
           />
+
+          {/* Display weather description */}
           <p className="weather-app__description">
-            {weatherData.weather?.[0]?.description ||
-              "No description available"}{" "}
-            {/* Weather description */}
+            {weatherData.weather?.[0]?.description || "No description available"}
           </p>
         </div>
       )}
@@ -161,4 +183,6 @@ const Weather = () => {
   );
 };
 
-export default Weather; // Export the Weather component for use in other parts of the app
+export default Weather; // Export the Weather component for use in other files
+
+
