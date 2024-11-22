@@ -1,5 +1,5 @@
 import axios from "axios"; // Importing the axios library for making HTTP requests
-import { useState, useEffect } from "react"; // Importing React hooks for managing state and side effects
+import { useState, useEffect, useCallback } from "react"; // Importing React hooks for managing state and side effects
 import "./Weather.css"; // Importing the CSS file for styling the Weather component
 
 // The Weather component that displays weather information for a city
@@ -20,66 +20,69 @@ const Weather = () => {
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
   // Function to fetch weather data for a given city name
-  const fetchWeatherData = async (cityName) => {
-    // Check if the API key is missing, and show an error if it is
-    if (!API_KEY) {
-      setError("API Key is missing or invalid."); // Set an error message
-      setLoading(false); // Stop the loading spinner
-      return; // Exit the function early
-    }
-
-    // Check if the city name is empty, and show an error if it is
-    if (cityName.trim() === "") {
-      setError("City name cannot be empty."); // Display an error for empty input
-      return; // Exit the function early
-    }
-
-    // Set loading state to true before starting the API request
-    setLoading(true);
-    setError(null); // Clear any previous errors
-
-    try {
-      // Make a GET request to the OpenWeather API
-      const response = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather`,
-        {
-          params: {
-            q: cityName.trim(), // Trim whitespace from the city name
-            units: "metric", // Use metric units for temperature (Celsius)
-            lang: "en", // Set language for descriptions to English
-            appid: API_KEY, // Pass the API key for authentication
-          },
-        }
-      );
-
-      // If the request is successful, store the weather data in state
-      setWeatherData(response.data);
-    } catch (err) {
-      // Handle errors from the API
-      if (err.response) {
-        // If the API returns a 404 status, the city was not found
-        setError(
-          err.response.status === 404
-            ? `City "${cityName}" not found. Please try another city.`
-            : "Failed to fetch weather data. Please try again later."
-        );
-      } else {
-        // Handle unexpected network or server errors
-        setError("An unexpected error occurred. Please try again later.");
+  const fetchWeatherData = useCallback(
+    async (cityName) => {
+      // Check if the API key is missing, and show an error if it is
+      if (!API_KEY) {
+        setError("API Key is missing or invalid."); // Set an error message
+        setLoading(false); // Stop the loading spinner
+        return; // Exit the function early
       }
 
-      // Clear any previous weather data if the request fails
-      setWeatherData(null);
-    } finally {
-      // Stop the loading spinner after the request completes
-      setLoading(false);
-    }
-  };
+      // Check if the city name is empty, and show an error if it is
+      if (cityName.trim() === "") {
+        setError("City name cannot be empty."); // Display an error for empty input
+        return; // Exit the function early
+      }
+
+      // Set loading state to true before starting the API request
+      setLoading(true);
+      setError(null); // Clear any previous errors
+
+      try {
+        // Make a GET request to the OpenWeather API
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather`,
+          {
+            params: {
+              q: cityName.trim(), // Trim whitespace from the city name
+              units: "metric", // Use metric units for temperature (Celsius)
+              lang: "en", // Set language for descriptions to English
+              appid: API_KEY, // Pass the API key for authentication
+            },
+          }
+        );
+
+        // If the request is successful, store the weather data in state
+        setWeatherData(response.data);
+      } catch (err) {
+        // Handle errors from the API
+        if (err.response) {
+          // If the API returns a 404 status, the city was not found
+          setError(
+            err.response.status === 404
+              ? `City "${cityName}" not found. Please try another city.`
+              : "Failed to fetch weather data. Please try again later."
+          );
+        } else {
+          // Handle unexpected network or server errors
+          setError("An unexpected error occurred. Please try again later.");
+        }
+
+        // Clear any previous weather data if the request fails
+        setWeatherData(null);
+      } finally {
+        // Stop the loading spinner after the request completes
+        setLoading(false);
+      }
+    },
+    [API_KEY] // Dependencies for useCallback: API_KEY is assumed to remain constant
+  );
 
   // Automatically fetch weather data for the default city ("Stockholm") when the component first loads
   useEffect(() => {
     fetchWeatherData(city);
-  }, []); // Empty dependency array ensures this runs only once
+  }, [city, fetchWeatherData]); // Include 'city' and 'fetchWeatherData' in the dependency array
 
   // Handle form submission when the user searches for a new city
   const handleSubmit = (e) => {
