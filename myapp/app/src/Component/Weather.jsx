@@ -19,6 +19,8 @@ const Weather = () => {
   // API key for accessing the OpenWeather API, stored securely in environment variables
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
+ 
+ 
   // Function to fetch weather data for a given city name
   const fetchWeatherData = useCallback(
     async (cityName) => {
